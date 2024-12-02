@@ -7,13 +7,12 @@ const app = express();
 const PORT = process.env.PORT;
 
 // Middlewares
-app.use(cors());
+app.use(cors({ origin: ['http://localhost:3000'] }));
 app.use(express.json());
 
 // Routes
-app.get("/", (req, res) => {
-  res.send("Express server is running!");
-});
+app.use('/', require('../routes/root'));
+app.use('/auth', require('../routes/auth'));
 
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`),
