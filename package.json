@@ -1,0 +1,11 @@
+{
+  "name": "echoes",
+  "version": "1.0.0",
+  "scripts": {
+    "initiate": "concurrently \"cd ./server && npm run install\" \"cd ./client && npm run install\"",
+    "dev": "concurrently \"cd ./server && npm run dev\" \"cd ./client && npm run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
