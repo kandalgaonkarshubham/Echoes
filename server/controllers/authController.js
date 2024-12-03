@@ -1,14 +1,17 @@
+const { eq } = require('drizzle-orm/expressions');
+
 const bcrypt = require('bcryptjs');
-const db = require('../db');
-const { users, journals } = require('../db/schema');
+const { db } = require('../db');
+const { users } = require('../db/schema');
 
 
 const register = async (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ message: 'Incomplete Request' });
 
   try {
     // Check if user exists
-    const existingUser = await db.select(users).where(users.email.eq(email));
+    const existingUser = await db.select().from(users).where(eq(users.email, email));
     if (existingUser.length) {
       return res.status(400).json({ message: 'User already exists' });
     }
@@ -28,13 +31,13 @@ const register = async (req, res) => {
   }
 };
 
-
 const login = async (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ message: 'Incomplete Request' });
 
   try {
     // Check if user exists
-    const user = await db.select(users).where(users.email.eq(email)).limit(1);
+    const user = await db.select().from(users).where(eq(users.email, email)).limit(1);
     if (!user.length) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -42,11 +45,11 @@ const login = async (req, res) => {
     // Validate password
     const isValid = await bcrypt.compare(password, user[0].password);
     if (!isValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Wrong Password' });
     }
 
     res.json({
-      message: 'Login successful',
+      apiKey: process.env.API_KEY,
       user: { email: user[0].email },
     });
   } catch (error) {

@@ -11,7 +11,7 @@ const journals = pgTable('journals', {
   title: varchar('title', { length: 200 }).notNull(),
   content: text('content').notNull(),
   userId: integer('user_id')
-    .references(() => userTable.id)
+    .references(() => users.id)
     .notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
