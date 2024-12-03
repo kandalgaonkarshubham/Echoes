@@ -72,7 +72,7 @@ export default function journals() {
               <nav>
                 <ul className="flex items-center gap-6 text-lg">
                   <li>
-                    <a className="font-Syne transition hover:text-accent-red" href="#">Logout</a>
+                    <Link className="font-Syne transition hover:text-accent-red" href="/app/logout">Logout</Link>
                   </li>
                 </ul>
               </nav>

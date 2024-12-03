@@ -50,7 +50,7 @@ const login = async (req, res) => {
 
     res.json({
       apiKey: process.env.API_KEY,
-      user: { email: user[0].email },
+      email: user[0].email,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
