@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const db = require('../db');
-const users = require('../db/schema/users');
+const { users, journals } = require('../db/schema');
 
 
 const register = async (req, res) => {

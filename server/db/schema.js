@@ -1,12 +1,12 @@
 const { pgTable, serial, varchar, text, timestamp, integer } = require('drizzle-orm/pg-core');
 
-export const userTable = pgTable('users', {
+const users = pgTable('users', {
   id: serial('id').primaryKey(),
   email: varchar('email', { length: 100 }).notNull().unique(),
   password: varchar('password', { length: 200 }).notNull(),
 });
 
-export const journalTable = pgTable('journals', {
+const journals = pgTable('journals', {
   id: serial('id').primaryKey(),
   title: varchar('title', { length: 200 }).notNull(),
   content: text('content').notNull(),
@@ -16,3 +16,5 @@ export const journalTable = pgTable('journals', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
+
+module.exports = { users, journals };

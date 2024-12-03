@@ -11,8 +11,8 @@ app.use(cors({ origin: ['http://localhost:3000'] }));
 app.use(express.json());
 
 // Routes
-app.use('/', require('../routes/root'));
-app.use('/auth', require('../routes/auth'));
+app.use('/', require('./routes/root'));
+app.use('/auth', require('./routes/auth'));
 
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`),
