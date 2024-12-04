@@ -21,3 +21,17 @@ export const useAuthStore = create(
     },
   ),
 );
+
+export const useJournalStore = create(
+  persist(
+    (set) => ({
+      journals: [],
+
+      setJournals: (journals) => set(journals),
+      addJournal: (newJournal) => set((state) => ({ journals: [...state.journals, newJournal] })),
+    }),
+    {
+      name: 'journals',
+    },
+  ),
+);

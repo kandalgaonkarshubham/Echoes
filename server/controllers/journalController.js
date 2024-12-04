@@ -1,12 +1,11 @@
 const { eq, and } = require('drizzle-orm/expressions');
 const { sql } = require('drizzle-orm');
-
 const { db } = require('../db');
 const { users, journals } = require('../db/schema');
 
 
 const getJournals = async (req, res) => {
-  const { email } = req.body;
+  const { email } = req.query;
   if (!email) return res.status(400).json({ message: 'Incomplete Request' })
 
   try {
@@ -36,9 +35,15 @@ const createJournal = async (req, res) => {
     }
 
     // Insert journal into database
-    await db.insert(journals).values({ title, content, userId: user[0].id });
+    const [newJournal] = await db.insert(journals).values({ title, content, userId: user[0].id }).returning({
+      id: journals.id,
+      title: journals.title,
+      content: journals.content,
+      createdAt: journals.createdAt,
+      updatedAt: journals.updatedAt
+    });
 
-    res.status(201).json({ message: 'Journal entry added' });
+    res.status(201).json({ message: 'Journal entry added', newJournal });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -67,7 +72,18 @@ const updateJournal = async (req, res) => {
 
     await db.update(journals).set({ title, content, updatedAt: sql`NOW()` }).where(eq(journals.id, id));
 
-    res.json({ message: 'Journal Updated' });
+    const [updatedJournal] = await db
+      .select({
+        id: journals.id,
+        title: journals.title,
+        content: journals.content,
+        createdAt: journals.createdAt,
+        updatedAt: journals.updatedAt,
+      })
+      .from(journals)
+      .where(eq(journals.id, id));
+
+    res.json({ message: 'Journal Updated', updatedJournal });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
