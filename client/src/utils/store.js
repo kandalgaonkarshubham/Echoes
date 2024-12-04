@@ -6,13 +6,14 @@ export const useAuthStore = create(
     (set) => ({
       email: '',
       apiKey: '',
+      isAuthenticated: false,
 
       login: (email, apiKey) => {
-        set({ email, apiKey });
+        set({ email, apiKey, isAuthenticated: true });
         document.cookie = "isAuthenticated=true; path=/; expires=" + new Date(Date.now() + 86400000).toUTCString();
       },
       logOut: () => {
-        set({ email: '', apiKey: '' });
+        set({ email: '', apiKey: '', isAuthenticated: false });
         document.cookie = "isAuthenticated=; path=/; expires=" + new Date(0).toUTCString();
       },
     }),

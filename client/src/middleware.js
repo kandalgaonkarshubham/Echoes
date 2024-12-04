@@ -10,8 +10,8 @@ export async function middleware(request) {
     return NextResponse.redirect(new URL('/auth', request.url));
   }
 
-  // If the user IS authenticated and tries to access `/auth` or `/`, redirect to `/app/journals`
-  if (isAuthenticated && (pathname === '/auth' || pathname === '/')) {
+  // If the user IS authenticated and tries to access `/auth` redirect to `/app/journals`
+  if (isAuthenticated && pathname === '/auth') {
     return NextResponse.redirect(new URL('/app', request.url));
   }
 
@@ -20,5 +20,5 @@ export async function middleware(request) {
 
 // Paths to protect
 export const config = {
-  matcher: ['/app/:path*', '/auth', '/'],
+  matcher: ['/app/:path*', '/auth'],
 }
