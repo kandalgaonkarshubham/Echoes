@@ -15,6 +15,7 @@ export const useAuthStore = create(
       logOut: () => {
         set({ email: '', apiKey: '', isAuthenticated: false });
         document.cookie = "isAuthenticated=; path=/; expires=" + new Date(0).toUTCString();
+        useJournalStore.getState().clearJournals();
       },
     }),
     {
@@ -30,6 +31,7 @@ export const useJournalStore = create(
 
       setJournals: (journals) => set(journals),
       addJournal: (newJournal) => set((state) => ({ journals: [...state.journals, newJournal] })),
+      clearJournals: () => set({ journals: [] }),
     }),
     {
       name: 'journals',

@@ -17,6 +17,7 @@ app.use('/login', require('./routes/login'));
 app.use(apiMiddleware);
 app.use('/register', require('./routes/register'));
 app.use('/journal', require('./routes/journal'));
+app.use('/download', require('./routes/download'));
 
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`),

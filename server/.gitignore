@@ -12,5 +12,10 @@ coverage
 # Benchmarking
 benchmarks/graphs
 
+# Puppeteer
+.cache
+/public/*
+!public/
+
 # ignore additional files using core.excludesFile
 # https://git-scm.com/docs/gitignore
