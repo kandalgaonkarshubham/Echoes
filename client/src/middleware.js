@@ -3,10 +3,12 @@ import { NextResponse } from 'next/server';
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
   const isAuthenticated = await request.cookies.get('isAuthenticated');
-  const allowAccess = request.cookies.get('allowAccess');
+  const allowAccess = request.cookies.get('puppeteer');
 
   // for puppeteer backend
-  if (allowAccess && pathname.startsWith('/app/journal/')) {
+  if (!allowAccess && pathname.match(/^\/app\/journal\/[^/]+\/download$/)) {
+    return NextResponse.redirect(new URL('/auth', request.url));
+  } else if (allowAccess && pathname.match(/^\/app\/journal\/[^/]+\/download$/)) {
     return NextResponse.next();
   }
 
