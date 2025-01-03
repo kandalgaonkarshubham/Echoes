@@ -4,8 +4,8 @@ const path = require('path');
 
 
 const downloadJournal = async (req, res) => {
-  const { url, journal, format } = req.body;
-  if (!url || !journal || !format) {
+  const { journal, format } = req.body;
+  if (!journal || !format) {
     return res.status(400).json({ message: "Incomplete Request" });
   }
 
@@ -16,15 +16,21 @@ const downloadJournal = async (req, res) => {
 
       const context = browser.defaultBrowserContext();
       await context.setCookie({
-        name: 'allowAccess',
+        name: 'puppeteer',
         value: "true",
         domain: 'localhost',
         path: '/',
       });
 
-      await page.goto(`${url}?title=${journal.title}&content=${journal.content}&date=${journal.createdAt}`, {
+      await page.goto(`${process.env.FRONTEND_URL}/app/journal/${journal.id}/download`, {
         waitUntil: 'networkidle2',
       });
+      await page.evaluate((journalData) => {
+        window.journalData = journalData;
+        window.dispatchEvent(new CustomEvent('journalDataReady', {
+          detail: journalData
+        }));
+      }, journal);
       await page.waitForSelector('#puppeteer', { timeout: 10000 });
 
       const pdfPath = path.join(process.cwd(), 'public', 'puppeteer', 'output.pdf');

@@ -17,7 +17,6 @@ import { useAuthStore, useJournalStore } from "@/utils/store";
 export default function viewJournal() {
   const [loading, setLoading] = useState(true);
   const [journal, setJournal] = useState({});
-  const [puppeteerAccess, setPuppeteerAcess] = useState(false);
 
   const router = useRouter();
   const { query } = router;
@@ -27,19 +26,13 @@ export default function viewJournal() {
   const email = useAuthStore((state) => state.email);
 
   useEffect(() => {
-    if (query.title) {
-      // if puppeteer is accesing
-      console.log("puppeteer is accesing")
-      setPuppeteerAcess(true);
-      setJournal({ title: query.title, content: query.content, date: query.date });
-      setLoading(false);
-    } else if (query.slug) {
-    // if user is accessing
+    if (query.slug) {
       const journal = journals.find((j) => j.id == query.slug);
       setJournal(journal);
       setLoading(false);
     }
-  }, [router]);
+  }, [router])
+
 
   const formatDate = (isoString) => {
     const date = new Date(isoString);
@@ -103,61 +96,44 @@ export default function viewJournal() {
       {loading ? (
         <Loader slug={true} />
       ) : (
-        <>
-          {puppeteerAccess ? (
-            <div id="puppeteer" className="min-h-full bg-accent-yellow p-6">
-              <p className="text-xl text-neutral-600">{formatDate(journal.date)}</p>
-              <h1 className="text-4xl font-semibold text-primary my-2">
-                {journal.title}
-              </h1>
-
-              <div className="mt-3">
-                <p className="text-xl text-secondary">{journal.content}</p>
-              </div>
-            </div>
-          ) : (
-            <div className="min-h-full bg-accent-yellow p-6">
-              <header className="flex items-center justify-between mb-6">
-                <Link href="/app/journals">
-                  <MoveLeftIcon className="size-10 text-secondary" />
+          <div className="min-h-full bg-accent-yellow p-6">
+            <header className="flex items-center justify-between mb-6">
+              <Link href="/app/journals">
+                <MoveLeftIcon className="size-10 text-secondary" />
+              </Link>
+              <div className="relative flex items-center gap-4">
+                <Link href={`/app/journal/${journal.id}/edit`}>
+                  <PencilIcon className="size-6 text-sky-400" />
                 </Link>
-                    <div className="relative flex items-center gap-4">
-                      <Link href={`/app/journal/${journal.id}/edit`}>
-                        <PencilIcon className="size-6 text-sky-400" />
-                      </Link>
-                      <button onClick={() => deleteJournal(journal.id)}>
-                        <Trash2Icon className="size-6 text-rose-400" />
-                      </button>
-                      <button onClick={() => downloadFile(window.location.href, journal, "pdf")}>
-                        <FileTextIcon className="size-6 text-fuchsia-400" />
-                      </button>
-                      <button onClick={() => downloadFile(window.location.href, journal, "json")}>
-                        <FileJsonIcon className="size-6 text-fuchsia-400" />
-                      </button>
-                    </div>
-                  </header>
+                <button onClick={() => deleteJournal(journal.id)}>
+                  <Trash2Icon className="size-6 text-rose-400" />
+                </button>
+                <button onClick={() => downloadFile(window.location.href, journal, "pdf")}>
+                  <FileTextIcon className="size-6 text-fuchsia-400" />
+                </button>
+                <button onClick={() => downloadFile(window.location.href, journal, "json")}>
+                  <FileJsonIcon className="size-6 text-fuchsia-400" />
+                </button>
+              </div>
+            </header>
 
-                  <p className="text-xl text-neutral-600">
-                    {formatDate(journal.createdAt)}
-                    {journal.updatedAt != journal.createdAt && (
-                      <span className="text-neutral-700 font-bold">
-                        {" "}
-                        | {formatDate(journal.updatedAt)}
-                      </span>
-                    )}
-                  </p>
-                  <h1 className="text-4xl font-semibold text-primary my-2">
-                    {journal.title}
-                  </h1>
+            <p className="text-xl text-neutral-600">
+              {formatDate(journal.createdAt)}
+              {journal.updatedAt != journal.createdAt && (
+                <span className="text-neutral-700 font-bold">
+                  {" "}
+                  | {formatDate(journal.updatedAt)}
+                </span>
+              )}
+            </p>
+            <h1 className="text-4xl font-semibold text-primary my-2">
+              {journal.title}
+            </h1>
 
-                  <div className="mt-3">
-                    <p className="text-xl text-secondary">{journal.content}</p>
-                  </div>
-                </div>
-              )
-            }
-          </>
-
+            <div className="mt-3">
+              <p className="text-xl text-secondary">{journal.content}</p>
+            </div>
+          </div>
       )}
     </>
   );
